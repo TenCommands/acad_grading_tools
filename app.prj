@@ -1,0 +1,16 @@
+;;; VLisp project file [V2.0] app saved to:[d:\My Drive\Drafting\Technical\Leadership\acad_grading_tools] at:[12/3/2025]
+(VLISP-PROJECT-LIST 
+  :NAME
+  app
+  :OWN-LIST
+  nil
+  :FAS-DIRECTORY
+  nil
+  :TMP-DIRECTORY
+  nil
+  :PROJECT-KEYS
+  (:BUILD (:standard))
+  :CONTEXT-ID
+  :AUTOLISP
+)
+;;; EOF
