@@ -17,7 +17,8 @@
 
 # AutoCAD Grading Tools
 ### AutoCAD AutoLisp App
-> [!IMPORTANT] This project is in no way affiliated or supported by AutoCAD® or Autodesk.
+> [!IMPORTANT]
+> This project is in no way affiliated or supported by AutoCAD® or Autodesk.
 > This is being made by a high school student[^1] for the purposes of assisting in the grading process of the intro drafting class.
 
 > [!WARNING]
@@ -32,7 +33,8 @@
 > ```
 
 ### ![](.assets/appscript.png) Google Sheets Macros
-> [!NOTE] Installation Process
+> [!NOTE]
+> ### Installation Process
 > 1. Copy the code from the [file](appscripts/macros.gs)<br><br>
 > 2. Open up your google sheet.<br><br>
 > 3. Go to `Extensions` `>` `App Scripts`
@@ -50,11 +52,13 @@
 > 7. Go to `Extensions` `>` `Macros` `>` `Manage Macros` and set their keybinds as you wish.
 > <details><summary>Image</summary><img src=".assets/gs_mm.png" width="500"></details>
 
-> [!TIP] Keybindings
+> [!TIP]
+> ### Keybindings
 > Since keybindings are forced to be `Ctrl + Shift + Alt + <number key>` choose a number key that is closer to the left like `1`, `2`, or `3`.
 
 ### ![](.assets/AutoLISP.png) AutoCAD AutoLISP Apps
-> [!NOTE] Installation Process
+> [!NOTE]
+> ### Installation Process
 > `Incomplete`
 
 [^1]: @TenCommands
