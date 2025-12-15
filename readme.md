@@ -13,6 +13,7 @@
 
 > [!CAUTION]
 > Advises about risks or negative outcomes of certain actions.
+> Get-ChildItem -Include desktop.ini -Recurse -Hidden | Remove-Item -Force
 -->
 
 # AutoCAD Grading Tools
