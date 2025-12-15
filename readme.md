@@ -16,9 +16,8 @@
 -->
 
 # AutoCAD Grading Tools
-### AutoCAD AutoLisp App
 > [!IMPORTANT]
-> This project is in no way affiliated or supported by AutoCAD® or Autodesk.
+> This project is in no way affiliated or supported by AutoCAD®, Autodesk, or Google.
 > This is being made by a high school student[^1] for the purposes of assisting in the grading process of the intro drafting class.
 
 > [!WARNING]
@@ -60,5 +59,16 @@
 > [!NOTE]
 > ### Installation Process
 > `Incomplete`
+
+### ![](.assets/git.png) Versioning
+> [!NOTE]
+> This project uses `MAJOR[YEAR].MINOR[MONTH].PATCH[DAY]` for versioning. This makes our first version release `v125.012.011`.
+> 
+> | ${\color{#ffdd00}Major}$ | - Indicates major changes to the fundementals of the codebase. |
+> | - | - |
+> | ${\color{#00ff22}Minor}$ | **- Indicates minor changes or new features.** |
+> | ${\color{#00aaff}Patch}$ | **- Indicates bug fixes since previous version.** |
+>
+> This versioning system is unconventional but I hope that it leads to good communication between developer and user.
 
 [^1]: @TenCommands
