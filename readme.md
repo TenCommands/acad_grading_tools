@@ -41,20 +41,23 @@
 > <details><summary>Image</summary><img src=".assets/appscript_tutorial/1.png" width="500"></details><br><br>
 > 
 > 4. Replace `Code.gs` with the code you copied from [file](appscripts/macros.gs)
-> <details><summary>Image</summary><img src="assets/appscript_tutorial/2.png" width="500"></details><br><br>
+> <details><summary>Image</summary><img src=".assets/appscript_tutorial/2.png" width="500"></details><br><br>
 > 
 > 5. Rename `Code.gs` to `macros.gs` and save (`Ctrl+S`) so that google sheets will register the macros.
-> <details><summary>Image</summary><img src="assets/appscript_tutorial/3.png" width="500"></details><br><br>
+> <details><summary>Image</summary><img src=".assets/appscript_tutorial/3.png" width="500"></details><br><br>
 > 
-> 6. Reload your google sheet and go to `Extensions` `>` `Macros` `>` `Import macro` and import each of the macros.
-> <details><summary>Image</summary><img src="assets/appscript_tutorial/4.png" width="500"></details><br><br>
+> 6. Go back to your google sheet and reload the page then go to `Extensions` `>` `Macros` `>` `Import macro` and import each of the macros.
+> <details><summary>Image</summary><img src=".assets/appscript_tutorial/4.png" width="500"></details><br><br>
 > 
 > 7. Go to `Extensions` `>` `Macros` `>` `Manage Macros` and set their keybinds as you wish.
-> <details><summary>Image</summary><img src="assets/appscript_tutorial/5.png" width="500"></details>
+> <details><summary>Image</summary><img src=".assets/appscript_tutorial/5.png" width="500"></details>
+>
+> 8. Now that you have the macros installed and setup you are good to work. The `clearColumnH` macro will clear your entries into the `H` column. `copySelectedCells` will take your chosen feedback and comments and set them up in a text box on the sidebar without whitespace. That way you can save yourself the hassle of doing it manually.
+> 
 
 > [!TIP]
 > ### Keybindings
-> Since keybindings are forced to be `Ctrl + Shift + Alt + <number key>` choose a number key that is closer to the left like `1`, `2`, or `3`.
+> Since keybindings are forced to be `Ctrl + Shift + Alt + <number key>` choose a number key that is closer to the left or right like `1`, `2`, `3`, `8`, `9`, or `0`. The keybinds sadly do not work with the numpad keys and there is no workaround that I know of.
 
 ### ![](.assets/AutoLISP.png) AutoCAD AutoLISP Apps
 > [!NOTE]
