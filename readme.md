@@ -38,19 +38,19 @@
 > 1. Copy the code from the [file](appscripts/macros.gs)<br><br>
 > 2. Open up your google sheet.<br><br>
 > 3. Go to `Extensions` `>` `App Scripts`
-> <details><summary>Image</summary><img src=".assets/gs_ex_as.png" width="500"></details><br><br>
+> <details><summary>Image</summary><img src=".assets/appscript_tutorial/1.png" width="500"></details><br><br>
 > 
 > 4. Replace `Code.gs` with the code you copied from [file](appscripts/macros.gs)
-> <details><summary>Image</summary><img src=".assets/gs_ex_as_pa.png" width="500"></details><br><br>
+> <details><summary>Image</summary><img src="assets/appscript_tutorial/2.png" width="500"></details><br><br>
 > 
 > 5. Rename `Code.gs` to `macros.gs` and save (`Ctrl+S`) so that google sheets will register the macros.
-> <details><summary>Image</summary><img src=".assets/gs_ex_as_re.png" width="500"></details><br><br>
+> <details><summary>Image</summary><img src="assets/appscript_tutorial/3.png" width="500"></details><br><br>
 > 
 > 6. Reload your google sheet and go to `Extensions` `>` `Macros` `>` `Import macro` and import each of the macros.
-> <details><summary>Image</summary><img src=".assets/gs_im.png" width="500"></details><br><br>
+> <details><summary>Image</summary><img src="assets/appscript_tutorial/4.png" width="500"></details><br><br>
 > 
 > 7. Go to `Extensions` `>` `Macros` `>` `Manage Macros` and set their keybinds as you wish.
-> <details><summary>Image</summary><img src=".assets/gs_mm.png" width="500"></details>
+> <details><summary>Image</summary><img src="assets/appscript_tutorial/5.png" width="500"></details>
 
 > [!TIP]
 > ### Keybindings
@@ -63,12 +63,12 @@
 
 ### ![](.assets/git.png) Versioning
 > [!NOTE]
-> This project uses `MAJOR[YEAR].MINOR[MONTH].PATCH[DAY]` for versioning. This makes our first version release `v125.012.011`.
+> This project uses $\footnotesize{\textsf{\color{#ffdd00}MAJOR}}$[$\footnotesize{\textsf{\color{#ffdd77}YEAR}}$].$\footnotesize{\textsf{\color{#00ff22}MINOR}}$[$\footnotesize{\textsf{\color{#ddff22}MONTH}}$].$\footnotesize{\textsf{\color{#00aaff}PATCH}}$[$\footnotesize{\textsf{\color{#aaaaff}DAY}}$] for versioning. This makes our first version release v$\footnotesize{\textsf{\color{#ffdd00}1}}$$\footnotesize{\textsf{\color{#ffdd77}25}}$.$\footnotesize{\textsf{\color{#00ff22}0}}$$\footnotesize{\textsf{\color{#ddff22}12}}$.$\footnotesize{\textsf{\color{#00aaff}0}}$$\footnotesize{\textsf{\color{#aaaaff}11}}$ because it is the first major version with no minor changes or patches, and was finished on December 11th, 2025.
 > 
-> | ${\color{#ffdd00}Major}$ | - Indicates major changes to the fundementals of the codebase. |
+> | ${\textsf{\color{#ffdd00}MAJOR}}$ | - Indicates major changes to the fundementals of the codebase. |
 > | - | - |
-> | ${\color{#00ff22}Minor}$ | **- Indicates minor changes or new features.** |
-> | ${\color{#00aaff}Patch}$ | **- Indicates bug fixes since previous version.** |
+> | ${\textsf{\color{#00ff22}MINOR}}$ | **- Indicates minor changes or new features.** |
+> | ${\textsf{\color{#00aaff}PATCH}}$ | **- Indicates bug fixes since previous version.** |
 >
 > This versioning system is unconventional but I hope that it leads to good communication between developer and user.
 
