@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2015",
+    "lib": [
+      "ES2015"
+    ],
+    "checkJs": false
+  },
+  "include": [
+    "**/*.js",
+    "**/*.gs"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "typeAcquisition": {
+    "include": [
+      "google-apps-script"
+    ]
+  }
+}
