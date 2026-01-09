@@ -17,6 +17,10 @@
 -->
 
 # AutoCAD Grading Tools
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/tencommands/acad_grading_tools/latest) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/tencommands/acad_grading_tools) ![GitHub last commit](https://img.shields.io/github/last-commit/tencommands/acad_grading_tools?display_timestamp=committer&color=blue)
+
+
+
 > [!IMPORTANT]
 > This project is in no way affiliated or supported by AutoCAD®, Autodesk, or Google.
 > This is being made by a high school student[^1] for the purposes of assisting in the grading process of the intro drafting class.
