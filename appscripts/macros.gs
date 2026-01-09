@@ -39,52 +39,50 @@ function clearColumnH() {
     columnH.clearContent();
 }
 
-/*
 const CURRENT_VERSION = "v125.012.011";
 const GITHUB_REPO = "TenCommands/acad_grading_tools";
 
-function onOpen() {
-  checkVersionUpdate();
-}
+var functions = {
+  checkVersionUpdate: function() {
+    try {
+      const url = `api.github.com/repos/`+GITHUB_REPO+`/releases/latest`;
+      const response = UrlFetchApp.fetch(url, { "muteHttpExceptions": true });
 
-function checkVersionUpdate() {
-  try {
-    const url = `api.github.com/`+GITHUB_REPO+`/releases/latest`;
-    const response = UrlFetchApp.fetch(url, { "muteHttpExceptions": true });
-    
-    if (response.getResponseCode() !== 200) return;
+      if (response.getResponseCode() !== 200) return;
 
-    const data = JSON.parse(response.getContentText());
-    const latestVersion = data.tag_name.replace(/[vV]/g, "");
-    
-    if (isNewerVersion(latestVersion, CURRENT_VERSION)) {
-      showUpdateModal(latestVersion, data.html_url);
+      const data = JSON.parse(response.getContentText());
+      const latestVersion = data.tag_name.replace(/[vV]/g, "");
+
+      if (functions.isNewerVersion(latestVersion, CURRENT_VERSION)) {
+        functions.showUpdateModal(latestVersion, data.html_url);
+      }
+    } catch (e) {
+      console.error("Update check failed: " + e.message);
     }
-  } catch (e) {
-    console.error("Update check failed: " + e.message);
+  },
+  isNewerVersion: function(latest, current) {
+    const latestParts = latest.split('.').map(Number);
+    const currentParts = current.split('.').map(Number);
+
+    for (let i = 0; i < latestParts.length; i++) {
+      if (latestParts[i] > (currentParts[i] || 0)) return true;
+      if (latestParts[i] < (currentParts[i] || 0)) return false;
+    }
+    return false;
+  },
+  showUpdateModal: function(newVersion, url) {
+    const html = HtmlService.createHtmlOutput(
+      `<div style="font-family: sans-serif;">
+        <p>A newer version (<b>${newVersion}</b>) is available.</p>
+        <p><a href="${url}" target="_blank" style="color: #1a73e8;">View release on GitHub</a></p>
+        <button onclick="google.script.host.close()" style="padding: 5px 10px; cursor: pointer;">Dismiss</button>
+      </div>`
+    ).setWidth(350).setHeight(150);
+
+    SpreadsheetApp.getUi().showModalDialog(html, "Update Available");
   }
 }
 
-function isNewerVersion(latest, current) {
-  const latestParts = latest.split('.').map(Number);
-  const currentParts = current.split('.').map(Number);
-
-  for (let i = 0; i < latestParts.length; i++) {
-    if (latestParts[i] > (currentParts[i] || 0)) return true;
-    if (latestParts[i] < (currentParts[i] || 0)) return false;
-  }
-  return false;
+function onOpen() {
+  functions.checkVersionUpdate();
 }
-
-function showUpdateModal(newVersion, url) {
-  const html = HtmlService.createHtmlOutput(
-    `<div style="font-family: sans-serif;">
-      <p>A newer version (<b>${newVersion}</b>) is available.</p>
-      <p><a href="${url}" target="_blank" style="color: #1a73e8;">View release on GitHub</a></p>
-      <button onclick="google.script.host.close()" style="padding: 5px 10px; cursor: pointer;">Dismiss</button>
-    </div>`
-  ).setWidth(350).setHeight(150);
-
-  SpreadsheetApp.getUi().showModalDialog(html, "Update Available");
-}
-*/
