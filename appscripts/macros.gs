@@ -1,5 +1,5 @@
 // Change these values with each release.
-const CURRENT_VERSION = "124.012.011";
+const CURRENT_VERSION = "126.201.013";
 // This should link to the current repository of the maintainer.
 const GITHUB_REPO = "TenCommands/acad_grading_tools";
 
