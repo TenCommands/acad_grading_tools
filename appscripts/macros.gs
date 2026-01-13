@@ -1,3 +1,8 @@
+// Change these values with each release.
+const CURRENT_VERSION = "124.012.011";
+// This should link to the current repository of the maintainer.
+const GITHUB_REPO = "TenCommands/acad_grading_tools";
+
 // HTML template for the dialog box
 const HTML_CONTENT = `<html><head><base target="_top"></head><body><textarea id="textToCopy" rows="14" cols="30"><?= celltext ?></textarea><br><button onclick="copyToClipboard()">Copy Text</button><p id="status"></p><script>function copyToClipboard() {var copyText = document.getElementById("textToCopy");navigator.clipboard.writeText(copyText.value).then(function() {document.getElementById("status").innerText = "Text copied successfully!";}).catch(function(err) {document.getElementById("status").innerText = 'Failed to copy text: ' + err;});}</script></body></html>`;
 
@@ -39,47 +44,61 @@ function clearColumnH() {
     columnH.clearContent();
 }
 
-const CURRENT_VERSION = "v125.012.011";
-const GITHUB_REPO = "TenCommands/acad_grading_tools";
-
+// Storying functions that are not macros in an object so they don't appear in the macros screen and confuse users.
 var functions = {
   checkVersionUpdate: function() {
+    // Attempt to connect to the current github repo defined at the top and get the latest release number.
     try {
-      const url = `api.github.com/repos/`+GITHUB_REPO+`/releases/latest`;
-      const response = UrlFetchApp.fetch(url, { "muteHttpExceptions": true });
-
-      if (response.getResponseCode() !== 200) return;
-
+      SpreadsheetApp.getActiveSpreadsheet().toast("Checking for updates", "Version Check", 1);
+      const url = `api.github.com/repos/`+GITHUB_REPO+`/releases/latest`; // Connect to github
+      const response = UrlFetchApp.fetch(url, { "muteHttpExceptions": true }); // Get the response information
+      if (response.getResponseCode() !== 200) return; // Response code 200 is the only valid response. Return if not.
       const data = JSON.parse(response.getContentText());
-      const latestVersion = data.tag_name.replace(/[vV]/g, "");
-
+      const latestVersion = data.tag_name.replace(/[vV]/g, ""); // Regex parse the latest version to remove the `v` at the start if apparent
       if (functions.isNewerVersion(latestVersion, CURRENT_VERSION)) {
-        functions.showUpdateModal(latestVersion, data.html_url);
+        // If the latest version is newer then this will display a modal informing them that an update is available.
+        functions.showUpdateModal(latestVersion, data.html_url, data.body);
+      }else{
+        functions.isUptoDateToast()
       }
     } catch (e) {
+      // Send errors to console
       console.error("Update check failed: " + e.message);
+      SpreadsheetApp.getActiveSpreadsheet().toast("Update check failed: " + e.message, "Version Check", 1);
     }
   },
   isNewerVersion: function(latest, current) {
+    // Convert both strings into numbers in an array split by the delimiter `.`
     const latestParts = latest.split('.').map(Number);
     const currentParts = current.split('.').map(Number);
-
+    // Iterate the arrays and compare each part.
+    //The first part of the github version (latest) to appear greater than the current will return true
     for (let i = 0; i < latestParts.length; i++) {
       if (latestParts[i] > (currentParts[i] || 0)) return true;
       if (latestParts[i] < (currentParts[i] || 0)) return false;
     }
     return false;
   },
-  showUpdateModal: function(newVersion, url) {
+  // Display HTML popup modal to inform the user of an available update.
+  showUpdateModal: function(newVersion, url, body) {
     const html = HtmlService.createHtmlOutput(
-      `<div style="font-family: sans-serif;">
-        <p>A newer version (<b>${newVersion}</b>) is available.</p>
-        <p><a href="${url}" target="_blank" style="color: #1a73e8;">View release on GitHub</a></p>
+      `<script src="https://cdn.jsdelivr.net/npm/markdown-it@10.0.0/dist/markdown-it.min.js"></script>
+      <div style="font-family: sans-serif;">
+        <p>A newer version (<b>v${newVersion}</b>) is available. <a href="${url}" target="_blank" style="color: #1a73e8;">View release on GitHub</a></p>
+        <p></p>
+        <p>Current version: <b>v${CURRENT_VERSION}</b><p>
         <button onclick="google.script.host.close()" style="padding: 5px 10px; cursor: pointer;">Dismiss</button>
+        <div id="markdown"></div>
+        <script>
+          var md = window.markdownit();
+          document.getElementById("markdown").innerHTML = md.render(${body});
+        </script>
       </div>`
     ).setWidth(350).setHeight(150);
-
     SpreadsheetApp.getUi().showModalDialog(html, "Update Available");
+  },
+  isUptoDateToast: function(){
+    SpreadsheetApp.getActiveSpreadsheet().toast("You are up-to date.", "Version Check", 1);
   }
 }
 
