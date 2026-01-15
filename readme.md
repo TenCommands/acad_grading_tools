@@ -17,7 +17,9 @@
 -->
 
 # AutoCAD Grading Tools
-![GitHub commits since latest release](https://img.shields.io/github/commits-since/tencommands/acad_grading_tools/latest) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/tencommands/acad_grading_tools) ![GitHub last commit](https://img.shields.io/github/last-commit/tencommands/acad_grading_tools?display_timestamp=committer&color=blue)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/tencommands/acad_grading_tools/latest) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/tencommands/acad_grading_tools) ![GitHub last commit](https://img.shields.io/github/last-commit/tencommands/acad_grading_tools?display_timestamp=committer&color=blue)   
+![GitHub Open Issues](https://img.shields.io/github/issues-search/tencommands/acad_grading_tools?query=is%3Aissue%20is%3Aopen&label=Open%20Issues&color=%23ff2244) ![GitHub Fixed Issues](https://img.shields.io/github/issues-search/tencommands/acad_grading_tools?query=is%3Aissue%20is%3Aclosed%20reason%3Afixed&label=Fixed%20Issues&color=%2322ff44
+)
 
 
 
