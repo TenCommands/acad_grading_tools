@@ -32,3 +32,7 @@ Thank you for your interest in contributing! To maintain code quality, please re
 ### ![](/.assets/appscript.png) Google Sheets Macros
 > [!IMPORTANT]
 > The Google Sheets Macros are made with the provided Google App Script [macros.gs](/appscripts/macros.gs). I have done my absolute best to comment things to an extent that a complete beginner to programming could understand what is happening. I request that you do the same when you create your pull request.
+
+### ![](/.assets/AutoLISP.png) AutoCAD AutoLISP
+> [!IMPORTANT]
+> Since AutoCAD requires the archane and desolate language Lisp from like the 60s, you will likely have to learn it unless you are a maniac and already know it. As of right now this part of the project is still in a pre-release state which means it has 0 major, minor, or patches. Major should remain 0 until it has a full release.
