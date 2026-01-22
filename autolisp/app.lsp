@@ -1,3 +1,5 @@
+(setq VERSION "026.003.008")
+
 (defun C:HELLO (msg, / message) ; message is declared as a local variable
   (setq message (strcat "Hello world." msg)) ; set a value
   (alert message) ; displays an alert box with the message
