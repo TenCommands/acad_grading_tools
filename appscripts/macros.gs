@@ -45,6 +45,14 @@ function clearColumnH() {
 }
 
 // Storying functions that are not macros in an object so they don't appear in the macros screen and confuse users.
+/*
+Going to need to update how this works because the AutoCAD part of this project will have its own versioning and update checks with its own releases.
+This means that I will need to compare all releases in the repository to see if they end in "gs" or "ac" and then check the version numbers accordingly.
+- Get the list of all tags from the GitHub repository.
+https://api.github.com/repos/tencommands/acad_grading_tools/tags
+- View all details of a specific release by its tag name.
+https://api.github.com/repos/TenCommands/acad_grading_tools/releases/tags/v126.201.013gs
+*/
 var functions = {
   checkVersionUpdate: function() {
     // Attempt to connect to the current github repo defined at the top and get the latest release number.
