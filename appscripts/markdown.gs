@@ -11,8 +11,8 @@
  *   var htmlFromRelease = markdown.releaseUrl('https://github.com/TenCommands/acad_grading_tools/releases/tag/v126.201.013gs');
  */
 
-var markdownLib = (function () {
-	function fetchText(url, options) {
+var markdownLib = {
+	fetchText: function (url, options) {
 		options = options || {};
 		var fetchOpt = { muteHttpExceptions: true };
 		if (options.method) fetchOpt.method = options.method;
@@ -25,9 +25,9 @@ var markdownLib = (function () {
 		}
 		var res = UrlFetchApp.fetch(url, fetchOpt);
 		return { code: res.getResponseCode(), text: res.getContentText(), raw: res }; 
-	}
+	},
 
-	function parseGithubUrl(url) {
+	parseGithubUrl: function (url) {
 		// Recognize GitHub file URLs and release tag URLs
 		// examples:
 		// https://github.com/owner/repo/blob/branch/path/to/file.md
@@ -43,9 +43,9 @@ var markdownLib = (function () {
 		m = url.match(rawRe);
 		if (m) return { type: 'raw', owner: m[1], repo: m[2], ref: m[3], path: m[4] };
 		return null;
-	}
+	},
 
-	function blobToRaw(owner, repo, ref, path) {
+	blobToRaw: function (owner, repo, ref, path) {
 		// Use refs/heads for branches if not already refs/...
 		var refPart = ref;
 		if (!/^refs\//.test(refPart)) {
@@ -53,13 +53,13 @@ var markdownLib = (function () {
 			refPart = 'refs/heads/' + refPart;
 		}
 		return 'https://raw.githubusercontent.com/' + owner + '/' + repo + '/' + refPart + '/' + path;
-	}
+	},
 
-	function tagToApiRelease(owner, repo, tag) {
+	tagToApiRelease: function (owner, repo, tag) {
 		return 'https://api.github.com/repos/' + owner + '/' + repo + '/releases/tags/' + encodeURIComponent(tag);
-	}
+	},
 
-	function normalizePathParts(parts) {
+	normalizePathParts: function (parts) {
 		var out = [];
 		for (var i = 0; i < parts.length; i++) {
 			var p = parts[i];
@@ -68,9 +68,9 @@ var markdownLib = (function () {
 			out.push(p);
 		}
 		return out;
-	}
+	},
 
-	function resolveRelative(basePath, rel) {
+	resolveRelative: function (basePath, rel) {
 		// basePath is directory part (may be empty). rel is relative path.
 		if (/^https?:\/\//i.test(rel) || rel.indexOf('mailto:') === 0 || rel.indexOf('#') === 0 || rel.indexOf('data:') === 0) return rel;
 		if (rel.indexOf('/') === 0) {
@@ -80,17 +80,17 @@ var markdownLib = (function () {
 		var baseParts = basePath ? basePath.split('/') : [];
 		var relParts = rel.split('/');
 		var parts = baseParts.concat(relParts);
-		return normalizePathParts(parts).join('/');
-	}
+		return markdownLib.normalizePathParts(parts).join('/');
+	},
 
-	function rewriteLocalReferences(markdownText, context) {
+	rewriteLocalReferences: function (markdownText, context) {
 		// context: { owner, repo, ref, basePath, refType }
 		// Replace markdown links/images and HTML src/href attributes
 
 		// 1) Convert any GitHub blob links to their raw counterparts
 		markdownText = markdownText.replace(/https?:\/\/github\.com\/[^)\s'">]+/gi, function (match) {
-			var parsed = parseGithubUrl(match);
-			if (parsed && parsed.type === 'blob') return blobToRaw(parsed.owner, parsed.repo, parsed.ref, parsed.path);
+			var parsed = markdownLib.parseGithubUrl(match);
+			if (parsed && parsed.type === 'blob') return markdownLib.blobToRaw(parsed.owner, parsed.repo, parsed.ref, parsed.path);
 			return match;
 		});
 
@@ -98,7 +98,7 @@ var markdownLib = (function () {
 		function toRawIfRelative(url) {
 			if (!context || !context.owner || !context.repo || !context.ref) return url;
 			if (/^https?:\/\//i.test(url) || url.indexOf('mailto:') === 0 || url.indexOf('#') === 0 || url.indexOf('data:') === 0) return url;
-			var resolved = resolveRelative(context.basePath || '', url);
+			var resolved = markdownLib.resolveRelative(context.basePath || '', url);
 			var refPart = context.ref;
 			if (!/^refs\//.test(refPart)) {
 				if (context.refType === 'tag') refPart = 'refs/tags/' + refPart; else refPart = 'refs/heads/' + refPart;
@@ -119,9 +119,9 @@ var markdownLib = (function () {
 		});
 
 		return markdownText;
-	}
+	},
 
-	function renderWithGitHubMarkdown(mdText, repoContext) {
+	renderWithGitHubMarkdown: function (mdText, repoContext) {
 		var payload = { text: mdText, mode: 'gfm' };
 		if (repoContext && repoContext.owner && repoContext.repo) payload.context = repoContext.owner + '/' + repoContext.repo;
 		var options = {
@@ -130,13 +130,13 @@ var markdownLib = (function () {
 			payload: JSON.stringify(payload),
 			headers: { 'Accept': 'application/vnd.github+json' }
 		};
-		var res = fetchText('https://api.github.com/markdown', options);
+		var res = markdownLib.fetchText('https://api.github.com/markdown', options);
 		if (res.code >= 200 && res.code < 300) return res.text;
 		// Fallback: return escaped markdown as preformatted block if API fails
-		return '<pre>' + escapeHtml(mdText) + '</pre>';
-	}
+		return '<pre>' + markdownLib.escapeHtml(mdText) + '</pre>';
+	},
 
-	function clientHtmlFor(mdText) {
+	clientHtmlFor: function (mdText) {
 		// Build a self-contained HTML page that renders Markdown client-side
 		// Uses marked (+footnotes) and highlight.js to approximate GitHub rendering,
 		// and converts admonition-style blockquotes into styled divs.
@@ -187,32 +187,29 @@ var markdownLib = (function () {
 			'</body>' +
 			'</html>';
 		return html;
-	}
+	},
 
-	function escapeHtml(s) {
+	escapeHtml: function (s) {
 		return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 	}
+};
 
-	return {
-		fetchText: fetchText,
-		parseGithubUrl: parseGithubUrl,
-		blobToRaw: blobToRaw,
-		tagToApiRelease: tagToApiRelease,
-		rewriteLocalReferences: rewriteLocalReferences,
-		renderWithGitHubMarkdown: renderWithGitHubMarkdown,
-		resolveRelative: resolveRelative
-	};
-})();
+var markdown = {
+	string: function (mdString) {
+		// Prefer server-side GitHub rendering (more reliable in Apps Script).
+		var rendered = markdownLib.renderWithGitHubMarkdown(mdString, null);
+		// If the renderer fell back to a plain escaped <pre>, use client-side page for best UX
+		if (rendered && rendered.indexOf('<pre>') === 0) {
+			var pre = markdownLib.rewriteLocalReferences(mdString, null);
+			var html = markdownLib.clientHtmlFor(pre);
+			return HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME);
+		}
+		// Wrap server-rendered fragment in a minimal HTML page with GitHub markdown CSS
+		var full = '<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css"><style>body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding:16px;} .markdown-body{box-sizing:border-box;min-width:200px;max-width:980px;margin:0 auto;padding:16px;}</style></head><body><article class="markdown-body">' + rendered + '</article></body></html>';
+		return HtmlService.createHtmlOutput(full).setSandboxMode(HtmlService.SandboxMode.IFRAME);
+	},
 
-var markdown = (function () {
-	function string(mdString) {
-		// Use client-side rendering for full feature support and plugins
-		var pre = markdownLib.rewriteLocalReferences(mdString, null);
-		var html = markdownLib.clientHtmlFor(pre);
-		return HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME);
-	}
-
-	function fileUrl(fileUrl) {
+	fileUrl: function (fileUrl) {
 		// If fileUrl points to a github.com blob path, fetch the raw file then rewrite relative links
 		var parsed = markdownLib.parseGithubUrl(fileUrl);
 		if (parsed && parsed.type === 'blob') {
@@ -223,6 +220,13 @@ var markdown = (function () {
 			var basePath = path.split('/').slice(0, -1).join('/');
 			var context = { owner: owner, repo: repo, ref: ref, basePath: basePath, refType: 'branch' };
 			var rewritten = markdownLib.rewriteLocalReferences(mdText, context);
+			// Try server-side render first (uses GitHub API)
+			var rendered = markdownLib.renderWithGitHubMarkdown(rewritten, { owner: owner, repo: repo });
+			if (rendered && rendered.indexOf('<pre>') !== 0) {
+				var full = '<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css"><style>body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding:16px;} .markdown-body{box-sizing:border-box;min-width:200px;max-width:980px;margin:0 auto;padding:16px;}</style></head><body><article class="markdown-body">' + rendered + '</article></body></html>';
+				return HtmlService.createHtmlOutput(full).setSandboxMode(HtmlService.SandboxMode.IFRAME);
+			}
+			// Fallback to client-side rendering if server-side returned escaped content
 			var html = markdownLib.clientHtmlFor(rewritten);
 			return HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME);
 		}
@@ -236,9 +240,9 @@ var markdown = (function () {
 		} catch (e) {
 			return HtmlService.createHtmlOutput('<pre>Failed to fetch file: ' + String(e) + '</pre>');
 		}
-	}
+	},
 
-	function releaseUrl(releaseUrl) {
+	releaseUrl: function (releaseUrl) {
 		// Parse release tag URL, fetch release JSON via GitHub API, take 'body' field
 		var parsed = markdownLib.parseGithubUrl(releaseUrl);
 		if (parsed && parsed.type === 'release') {
@@ -250,6 +254,11 @@ var markdown = (function () {
 					var body = obj.body || '';
 					var context = { owner: parsed.owner, repo: parsed.repo, ref: parsed.tag, basePath: '', refType: 'tag' };
 					  var rewritten = markdownLib.rewriteLocalReferences(body, context);
+					  var rendered = markdownLib.renderWithGitHubMarkdown(rewritten, { owner: parsed.owner, repo: parsed.repo });
+					  if (rendered && rendered.indexOf('<pre>') !== 0) {
+						var full = '<!DOCTYPE html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown-light.min.css"><style>body{font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding:16px;} .markdown-body{box-sizing:border-box;min-width:200px;max-width:980px;margin:0 auto;padding:16px;}</style></head><body><article class="markdown-body">' + rendered + '</article></body></html>';
+						return HtmlService.createHtmlOutput(full).setSandboxMode(HtmlService.SandboxMode.IFRAME);
+					  }
 					  var html = markdownLib.clientHtmlFor(rewritten);
 					  return HtmlService.createHtmlOutput(html).setSandboxMode(HtmlService.SandboxMode.IFRAME);
 				} catch (e) {
@@ -261,11 +270,9 @@ var markdown = (function () {
 		}
 		return HtmlService.createHtmlOutput('<pre>Invalid GitHub release URL</pre>');
 	}
+};
 
-	return {
-		string: string,
-		fileUrl: fileUrl,
-		releaseUrl: releaseUrl
-	};
-})();
-
+function testMarkdown(){
+  const html = markdown.fileUrl("https://github.com/TenCommands/acad_grading_tools/blob/main/readme.md")
+  SpreadsheetApp.getUi().showModalDialog(html, "Markdown")
+}
