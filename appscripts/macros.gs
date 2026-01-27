@@ -55,22 +55,73 @@ https://api.github.com/repos/TenCommands/acad_grading_tools/releases/tags/v126.2
 */
 var functions = {
   checkVersionUpdate: function() {
-    // Attempt to connect to the current github repo defined at the top and get the latest release number.
+    // Attempt to connect to the GitHub repo defined at the top and get the most
+    // recent tag that ends with "gs" (for Google Apps Script). The repository
+    // may contain other release types (eg. AutoLISP), so we fetch tags and
+    // select the newest one whose name ends with "gs".
     try {
       SpreadsheetApp.getActiveSpreadsheet().toast("Checking for updates", "Version Check", 1);
-      const url = `api.github.com/repos/`+GITHUB_REPO+`/releases/latest`; // Connect to github
-      const response = UrlFetchApp.fetch(url, { "muteHttpExceptions": true }); // Get the response information
-      if (response.getResponseCode() !== 200) return; // Response code 200 is the only valid response. Return if not.
-      const data = JSON.parse(response.getContentText());
-      const latestVersion = data.tag_name.replace(/[vV]/g, ""); // Regex parse the latest version to remove the `v` at the start if apparent
-      if (functions.isNewerVersion(latestVersion, CURRENT_VERSION)) {
-        // If the latest version is newer then this will display a modal informing them that an update is available.
-        functions.showUpdateModal(latestVersion, data.html_url, data.body);
-      }else{
-        functions.isUptoDateToast()
+      var perPage = 100;
+      var page = 1;
+      var tags = [];
+      while (true) {
+        var url = `https://api.github.com/repos/${GITHUB_REPO}/tags?per_page=${perPage}&page=${page}`;
+        var response = UrlFetchApp.fetch(url, { "muteHttpExceptions": true });
+        if (response.getResponseCode() !== 200) break;
+        var pageTags = JSON.parse(response.getContentText());
+        if (!pageTags || pageTags.length === 0) break;
+        tags = tags.concat(pageTags);
+        if (pageTags.length < perPage) break; // no more pages
+        page++;
+      }
+
+      if (tags.length === 0) return;
+
+      // Find the newest tag that ends with 'gs' (case-insensitive).
+      var newestGsVersion = null;
+      var newestTagInfo = null;
+      tags.forEach(function(t) {
+        var name = t.name || "";
+        if (/gs$/i.test(name)) {
+          // Remove trailing 'gs' and an optional leading 'v' or 'V'
+          var ver = name.replace(/gs$/i, "").replace(/^[vV]/, "");
+          if (!newestGsVersion) {
+            newestGsVersion = ver;
+            newestTagInfo = t;
+          } else if (functions.isNewerVersion(ver, newestGsVersion)) {
+            newestGsVersion = ver;
+            newestTagInfo = t;
+          }
+        }
+      });
+
+      if (!newestGsVersion || !newestTagInfo) {
+        // No Google Apps Script (gs) tags found.
+        return;
+      }
+
+      if (functions.isNewerVersion(newestGsVersion.replace(/^[vV]/, ""), CURRENT_VERSION)) {
+        // Attempt to fetch release details for this tag (may not exist).
+        var htmlUrl = `https://github.com/${GITHUB_REPO}/releases/tag/${newestTagInfo.name}`;
+        var bodyText = '';
+        try {
+          var relApi = `https://api.github.com/repos/${GITHUB_REPO}/releases/tags/${encodeURIComponent(newestTagInfo.name)}`;
+          var relResp = UrlFetchApp.fetch(relApi, { "muteHttpExceptions": true });
+          if (relResp.getResponseCode() === 200) {
+            var relData = JSON.parse(relResp.getContentText());
+            htmlUrl = relData.html_url || htmlUrl;
+            bodyText = relData.body || '';
+          }
+        } catch (e) {
+          // ignore and fall back to tag URL
+          console.warn('Failed to fetch release details: ' + e.message);
+        }
+
+        functions.showUpdateModal(newestGsVersion, htmlUrl, bodyText);
+      } else {
+        functions.isUptoDateToast();
       }
     } catch (e) {
-      // Send errors to console
       console.error("Update check failed: " + e.message);
       SpreadsheetApp.getActiveSpreadsheet().toast("Update check failed: " + e.message, "Version Check", 1);
     }
@@ -99,7 +150,7 @@ var functions = {
         <div id="markdown"></div>
         <script>
           var md = window.markdownit();
-          document.getElementById("markdown").innerHTML = md.render(${body});
+          document.getElementById("markdown").innerHTML = md.render(${JSON.stringify(body || '')});
         </script>
       </div>`
     ).setWidth(350).setHeight(150);
